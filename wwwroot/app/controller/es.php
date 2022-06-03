@@ -1,28 +1,28 @@
 <?php
 
-namespace app\index\controller;
+namespace app\controller;
 
-use Elasticsearch\ClientBuilder;
+use app\BaseController;
+use Elastic\Elasticsearch\ClientBuilder;
 
-class Search
+class Es extends BaseController
 {
     private $client;
     // 构造函数
     public function __construct()
     {
-        $params = array(
-            '127.0.0.1:9200'
-        );
+        $params = ['es:9200'];
         $this->client = ClientBuilder::create()->setHosts($params)->build();
     }
 
     // 创建索引
     public function index()
-    { // 只能创建一次
-        $r = $this->delete_index();
-        $r = $this->create_index();  //1.创建索引
-        $r = $this->create_mappings(); //2.创建文档模板
-        $r = $this->get_mapping();
+    {
+        // 只能创建一次
+        // $r = $this->delete_index();
+        // $r = $this->create_index();  //1.创建索引
+        // $r = $this->create_mappings(); //2.创建文档模板
+        // $r = $this->get_mapping();
         $docs = [];
         $docs[] = ['id' => 1, 'name' => '小明', 'profile' => '我做的ui界面强无敌。', 'age' => 23];
         $docs[] = ['id' => 2, 'name' => '小张', 'profile' => '我的php代码无懈可击。', 'age' => 24];
@@ -31,10 +31,13 @@ class Search
         $docs[] = ['id' => 5, 'name' => '小吴', 'profile' => 'php是最好的语言。', 'job' => 21];
         $docs[] = ['id' => 6, 'name' => '小翁', 'profile' => '别烦我，我正在敲bug呢！', 'age' => 25];
         $docs[] = ['id' => 7, 'name' => '小杨', 'profile' => '为所欲为，不行就删库跑路', 'age' => 27];
+        $docs[] = ['id' => 8, 'name' => 'yong', 'profile' => 'test......', 'age' => 27];
         foreach ($docs as $k => $v) {
             $r = $this->add_doc($v['id'], $v);   //3.添加文档
         }
-        $r = $this->search_doc("删库 别烦我");  //4.搜索结果
+        // $r = $this->search_doc("无");  //4.搜索结果
+        $r = $this->get_doc(1);
+        print_r($r);
     }
 
     // 创建索引
@@ -44,15 +47,14 @@ class Search
             'index' => $index_name,
             'body' => [
                 'settings' => [
-                    'number_of_shards' => 5,
+                    'number_of_shards' => 15,
                     'number_of_replicas' => 0
                 ]
             ]
         ];
-
         try {
             return $this->client->indices()->create($params);
-        } catch (Elasticsearch\Common\Exceptions\BadRequest400Exception $e) {
+        } catch (\Exception $e) {
             $msg = $e->getMessage();
             $msg = json_decode($msg, true);
             return $msg;
@@ -70,14 +72,13 @@ class Search
     // 创建文档模板
     public function create_mappings($type_name = 'users', $index_name = 'test_ik')
     {
-
         $params = [
             'index' => $index_name,
             'type' => $type_name,
             'body' => [
                 $type_name => [
                     '_source' => [
-                        'enabled' => true
+                        // 'enabled' => true
                     ],
                     'properties' => [
                         'id' => [
@@ -101,7 +102,6 @@ class Search
                 ]
             ]
         ];
-
         $response = $this->client->indices()->putMapping($params);
         return $response;
     }
@@ -126,7 +126,6 @@ class Search
             'id' => $id,
             'body' => $doc
         ];
-
         $response = $this->client->index($params);
         return $response;
     }
@@ -150,10 +149,9 @@ class Search
     {
         $params = [
             'index' => $index_name,
-            'type' => $type_name,
+            'type' => '_doc',
             'id' => $id
         ];
-
         $response = $this->client->get($params);
         return $response;
     }
@@ -214,7 +212,6 @@ class Search
                 'sort' => ['age' => ['order' => 'desc']], 'from' => $from, 'size' => $size
             ]
         ];
-
         $results = $this->client->search($params);
         return $results;
     }
