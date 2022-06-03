@@ -1,0 +1,39 @@
+# es  php
+version: "3"
+services:
+  es:
+    image: elasticsearch:7.14.1
+    container_name: xgk-o-es
+    environment:
+      - node.name=es01
+      - cluster.name=es-cluster-ai66
+      - cluster.initial_master_nodes=es01
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./es/data:/usr/share/elasticsearch/data
+      # - ./es/config:/usr/share/elasticsearch/config
+    ports:
+      - 9201:9200
+    networks:
+      - es-php
+
+  php:
+    build: ./php
+    container_name: xgk-o-php
+    ports:
+      - 8697:8000
+    volumes:
+      - ../wwwroot:/app/wwwroot
+    restart: unless-stopped
+    command: php /app/wwwroot/think run
+    networks:
+      - es-php
+
+networks:
+  es-php:
+    driver: bridge
