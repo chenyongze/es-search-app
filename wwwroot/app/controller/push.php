@@ -25,20 +25,12 @@ class Push extends BaseController
     // 创建索引
     public function index()
     {
-        $docs[] = ['id' => 1, 'name' => '小明', 'profile' => '我做的ui界面强无敌。', 'age' => 23];
-        $docs[] = ['id' => 2, 'name' => '小张', 'profile' => '我的php代码无懈可击。', 'age' => 24];
-        $docs[] = ['id' => 3, 'name' => '小王', 'profile' => 'C的生活，快乐每一天。', 'age' => 29];
-        $docs[] = ['id' => 4, 'name' => '小赵', 'profile' => '就没有我做不出的前端页面。', 'age' => 26];
-        $docs[] = ['id' => 5, 'name' => '小吴', 'profile' => 'php是最好的语言。', 'job' => 21];
-        $docs[] = ['id' => 6, 'name' => '小翁', 'profile' => '别烦我，我正在敲bug呢！', 'age' => 25];
-        $docs[] = ['id' => 7, 'name' => '小杨', 'profile' => '为所欲为，不行就删库跑路', 'age' => 27];
-        $docs[] = ['id' => 8, 'name' => 'yong', 'profile' => 'test......', 'age' => 27];
-        $docs[] = ['id' => 9, 'name' => '88888', 'profile' => 'testssss', 'age' => 27];
-        $docs[] = ['id' => 10, 'name' => '小嘻嘻嘻', 'profile' => 'testssss', 'age' => 27];
-        $docs[] = ['id' => 11, '名字' => '小嘻嘻嘻', 'profile' => 'testssss', 'age' => 27];
+        $docs[] = ['name' => '小甜甜zzz', 'profile' => 'testssss', 'age' => 27];
+        $docs[] = ['name' => '小甜甜mmm', '爱好' => '跳舞', 'age' => 27];
+        $docs[] = ['name' => '小嘻嘻嘻', 'profile' => 'testssss', 'age' => 27];
         foreach ($docs as $k => $v) {
             //3.添加文档
-            $r = $this->addDoc($v['id'], $v);
+            $r = $this->addDoc(null, $v);
             dump($r);
         }
     }
