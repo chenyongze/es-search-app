@@ -15,5 +15,10 @@ thinkphp6   elasticsearch:8.2.2  php:8.0-rc-cli-alpine  docker  docker-compose �
 
 
 # 启动项目
+
+```shell
+
 cd project/docker
 docker-compose up -d
+
+```
