@@ -18,7 +18,14 @@ thinkphp6   elasticsearch:8.2.2  php:8.0-rc-cli-alpine  docker  docker-compose �
 
 ```shell
 
+# 导出镜像
+docker save -o es-search-app.tar docker_php elasticsearch:8.2.2
+# 导入镜像
+docker load -i es-search-app.tar
+
 cd project/docker
 docker-compose up -d
 
 ```
+
+

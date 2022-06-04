@@ -1,2 +1,3 @@
 docker/es/logs
 docker/es/data
+es-search-app.tar
