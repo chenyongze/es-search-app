@@ -26,6 +26,14 @@ docker load -i es-search-app.tar
 cd project/docker
 docker-compose up -d
 
+
+
+#  win  电脑需要处理
+
+wsl -d  docker-destop
+
+echo 262144 >> /proc/sys/vm/max_map_count
+
 ```
 
 

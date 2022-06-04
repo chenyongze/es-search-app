@@ -52,7 +52,15 @@ class Index extends BaseController
             ]
         ];
         $results = $this->client->search($params);
-        $list = $results['hits']['hits'] ?? [];
+        $sourceList = $results['hits']['hits'] ?? [];
+        $list = [];
+        array_walk($sourceList, function ($val) use (&$list) {
+            $tmp = [];
+            foreach ($val['_source'] as $key => $value) {
+                $tmp[] = $key . " : " . $value;
+            }
+            $list[] = implode(" | ", $tmp);
+        });
         $pageCount = count($list);
         return view('index', [
             'list' => $list,

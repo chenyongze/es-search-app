@@ -24,7 +24,7 @@
                 <form class="layui-form" action="">
                     <div class="layui-form-item">
                         <input type="text" name="keywords" required lay-verify="required" placeholder="请输入"
-                            autocomplete="off" class="layui-input" width="80px" value="{$keywords}" >
+                            autocomplete="off" class="layui-input" width="80px" value="{$keywords}">
                         <button class="layui-btn" lay-submit lay-filter="bigDataForm">搜索</button>
                     </div>
                 </form>
@@ -34,9 +34,7 @@
             <tbody>
                 {foreach $list as $key => $vo}
                 <tr>
-                    {foreach $vo['_source'] as $key2 => $vo2}
-                    <td>{$key2}:{$vo2}</td>
-                    {/foreach}
+                    <td>{$vo}</td>
                 </tr>
                 {/foreach}
             </tbody>
