@@ -2,7 +2,7 @@
 version: "3"
 services:
   es:
-    image: elasticsearch:7.14.1
+    image: elasticsearch:8.2.2
     container_name: xgk-o-es
     environment:
       - node.name=es01
@@ -15,8 +15,9 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - ./es/data:/usr/share/elasticsearch/data
-      # - ./es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./es/data:/usr/share/elasticsearch/data:rw
+      - ./es/logs:/usr/share/elasticsearch/logs:rw
+      - ./es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     ports:
       - 9201:9200
     networks:
