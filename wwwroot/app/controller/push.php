@@ -5,7 +5,15 @@ namespace app\controller;
 use app\BaseController;
 use Elastic\Elasticsearch\ClientBuilder;
 
-class Es extends BaseController
+
+/**
+ * @file: push.php
+ * @Date: 2022/06/04 09:07:42
+ * @Author: yongze.chen
+ * @email: sapphire.php@gmail.com
+ * WORKSPACE_NAME: es-search-app
+ */
+class Push extends BaseController
 {
     private $client;
     public function __construct()
@@ -17,12 +25,8 @@ class Es extends BaseController
     // 创建索引
     public function index()
     {
-        // 只能创建一次
-        // $r = $this->delete_index();
-        // $r = $this->create_index();  //1.创建索引
-        // $r = $this->create_mappings(); //2.创建文档模板
-        // $r = $this->get_mapping();
-        $docs = [];
+        // $r = $this->createMappings();
+        // $r = $this->getMapping();
         $docs[] = ['id' => 1, 'name' => '小明', 'profile' => '我做的ui界面强无敌。', 'age' => 23];
         $docs[] = ['id' => 2, 'name' => '小张', 'profile' => '我的php代码无懈可击。', 'age' => 24];
         $docs[] = ['id' => 3, 'name' => '小王', 'profile' => 'C的生活，快乐每一天。', 'age' => 29];
@@ -31,17 +35,25 @@ class Es extends BaseController
         $docs[] = ['id' => 6, 'name' => '小翁', 'profile' => '别烦我，我正在敲bug呢！', 'age' => 25];
         $docs[] = ['id' => 7, 'name' => '小杨', 'profile' => '为所欲为，不行就删库跑路', 'age' => 27];
         $docs[] = ['id' => 8, 'name' => 'yong', 'profile' => 'test......', 'age' => 27];
+        $docs[] = ['id' => 9, 'name' => '88888', 'profile' => 'testssss', 'age' => 27];
         foreach ($docs as $k => $v) {
-            $r = $this->add_doc($v['id'], $v);   //3.添加文档
+            //3.添加文档
+            $r = $this->addDoc($v['id'], $v);
+            dump($r);
         }
-        // $r = $this->search_doc("无");  //4.搜索结果
-        $r = $this->get_doc(1);
-        print_r($r);
+        // $r = $this->get_doc(1);
+        // print_r($r);
     }
 
-    // 创建索引
-    public function create_index($index_name = 'test_ik')
-    { // 只能创建一次
+    /**
+     * http://localhost:8697/push/createIndex
+     * 创建索引
+     * @param string $index_name
+     * @return void
+     */
+    public function createIndex($index_name = 'big_data')
+    {
+        // 只能创建一次
         $params = [
             'index' => $index_name,
             'body' => [
@@ -60,8 +72,14 @@ class Es extends BaseController
         }
     }
 
-    // 删除索引
-    public function delete_index($index_name = 'test_ik')
+    /**
+     * http://localhost:8697/push/deleteIndex
+     * 删除索引
+     *
+     * @param string $index_name
+     * @return void
+     */
+    public function deleteIndex($index_name = 'big_data')
     {
         $params = ['index' => $index_name];
         $response = $this->client->indices()->delete($params);
@@ -69,7 +87,7 @@ class Es extends BaseController
     }
 
     // 创建文档模板
-    public function create_mappings($type_name = 'users', $index_name = 'test_ik')
+    public function createMappings($type_name = 'users', $index_name = 'big_data')
     {
         $params = [
             'index' => $index_name,
@@ -106,7 +124,7 @@ class Es extends BaseController
     }
 
     // 查看映射
-    public function get_mapping($type_name = 'users', $index_name = 'test_ik')
+    public function getMapping($type_name = 'users', $index_name = 'test_ik')
     {
         $params = [
             'index' => $index_name,
@@ -117,7 +135,7 @@ class Es extends BaseController
     }
 
     // 添加文档
-    public function add_doc($id, $doc, $index_name = 'test_ik', $type_name = 'users')
+    public function addDoc($id, $doc, $index_name = 'big_data', $type_name = 'users')
     {
         $params = [
             'index' => $index_name,
