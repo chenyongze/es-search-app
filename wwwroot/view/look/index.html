@@ -23,10 +23,9 @@
             <div class="layui-field-box">
                 <form class="layui-form" action="">
                     <div class="layui-form-item">
-                        <input type="text" name="title" required lay-verify="required" placeholder="请输入"
-                            autocomplete="off" class="layui-input" width="80px">
+                        <input type="text" name="keywords" required lay-verify="required" placeholder="请输入"
+                            autocomplete="off" class="layui-input" width="80px" value="{$keywords}" >
                         <button class="layui-btn" lay-submit lay-filter="bigDataForm">搜索</button>
-
                     </div>
                 </form>
             </div>
@@ -35,7 +34,7 @@
             <tbody>
                 {foreach $list as $key => $vo}
                 <tr>
-                    {foreach $vo as $key2 => $vo2}
+                    {foreach $vo['_source'] as $key2 => $vo2}
                     <td>{$key2}:{$vo2}</td>
                     {/foreach}
                 </tr>
@@ -43,7 +42,7 @@
             </tbody>
         </table>
         <!-- 分页 -->
-        <div id="big-data-page"></div>
+        <!-- <div id="big-data-page"></div> -->
 </body>
 
 <script>
@@ -51,8 +50,8 @@
         var form = layui.form;
         //监听提交
         form.on('submit(bigDataForm)', function (data) {
-            layer.msg(JSON.stringify(data.field));
-            return false;
+            // layer.msg(JSON.stringify(data.field));
+            // return false;
         });
     });
 

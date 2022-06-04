@@ -10,9 +10,4 @@ class Index extends BaseController
     {
         return 'es search page';
     }
-
-    public function hello($name = 'ThinkPHP6')
-    {
-        return 'hello,' . $name;
-    }
 }

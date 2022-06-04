@@ -12,6 +12,7 @@ namespace app\controller;
 
 use app\BaseController;
 use Elastic\Elasticsearch\ClientBuilder;
+use think\facade\Request;
 use think\facade\View;
 
 class Look extends BaseController
@@ -30,33 +31,88 @@ class Look extends BaseController
      */
     public function index()
     {
-
-        $list = [
-            [
-                "姓名" => '111',
-                "年龄" => 90,
-                "生肖" => "狗",
-            ],
-            [
-                "姓名" => '111',
-                "年龄" => 90,
-                "生肖" => "狗",
-            ],
-            [
-                "姓名" => '111',
-                "年龄" => 90,
-                "生肖" => "狗",
-            ],
-            [
-                "姓名" => '111',
-                "年龄" => 90,
-                "生肖" => "狗",
-            ],
+        $keywords = Request::get('keywords', "");
+        $from = 0;
+        $size = 8000;
+        $params =  [
+            'index' => "big_data",
+            'body' => [
+                'query' => [
+                    "match" => [
+                        "name" => [
+                            'query' => $keywords,
+                            'boost' => 3, // 权重
+                        ],
+                    ],
+                ],
+                'from' => $from,
+                'size' => $size
+            ]
         ];
+        $results = $this->client->search($params);
+        $list = $results['hits']['hits'] ?? [];
         $pageCount = count($list);
         return view('index', [
             'list' => $list,
+            'keywords' => $keywords,
             'pageCount' => $pageCount,
         ]);
+    }
+
+    /**
+     * search
+     *
+     * @return void
+     */
+    public function testSearch()
+    {
+        $keywords = 'yong';
+        $from = 0;
+        $size = 5000;
+        $params = [
+            'index' => "big_data",
+            'type' => '_doc',
+            'body' => [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            ['match' => ['profile' => [
+                                'query' => $keywords,
+                                'boost' => 3, // 权重大
+                            ],],],
+                            ['match' => ['name' => [
+                                'query' => $keywords,
+                                'boost' => 2,
+                            ]]],
+                        ],
+                    ],
+                ],
+                // 'sort' => [
+                //     'age' => ['order' => 'desc'],
+                // ],
+                'from' => $from,
+                'size' => $size
+            ]
+        ];
+
+        // $params2 =  [
+        //     'index' => "big_data",
+        //     // 'type' => '_doc',
+        //     'body' => [
+        //         'query' => [
+        //             "match" => [
+        //                 //"name"=>$keywords, 或者
+        //                 "name" => [
+        //                     'query' => $keywords,
+        //                     'boost' => 3, // 权重
+        //                 ],
+        //             ],
+        //         ],
+        //         'from' => $from,
+        //         'size' => $size
+        //     ]
+        // ];
+        $results = $this->client->search($params);
+        dump($results['hits']['hits']);
     }
 }

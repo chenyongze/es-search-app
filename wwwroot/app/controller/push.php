@@ -25,8 +25,6 @@ class Push extends BaseController
     // 创建索引
     public function index()
     {
-        // $r = $this->createMappings();
-        // $r = $this->getMapping();
         $docs[] = ['id' => 1, 'name' => '小明', 'profile' => '我做的ui界面强无敌。', 'age' => 23];
         $docs[] = ['id' => 2, 'name' => '小张', 'profile' => '我的php代码无懈可击。', 'age' => 24];
         $docs[] = ['id' => 3, 'name' => '小王', 'profile' => 'C的生活，快乐每一天。', 'age' => 29];
@@ -36,13 +34,13 @@ class Push extends BaseController
         $docs[] = ['id' => 7, 'name' => '小杨', 'profile' => '为所欲为，不行就删库跑路', 'age' => 27];
         $docs[] = ['id' => 8, 'name' => 'yong', 'profile' => 'test......', 'age' => 27];
         $docs[] = ['id' => 9, 'name' => '88888', 'profile' => 'testssss', 'age' => 27];
+        $docs[] = ['id' => 10, 'name' => '小嘻嘻嘻', 'profile' => 'testssss', 'age' => 27];
+        $docs[] = ['id' => 11, '名字' => '小嘻嘻嘻', 'profile' => 'testssss', 'age' => 27];
         foreach ($docs as $k => $v) {
             //3.添加文档
             $r = $this->addDoc($v['id'], $v);
             dump($r);
         }
-        // $r = $this->get_doc(1);
-        // print_r($r);
     }
 
     /**
@@ -124,7 +122,7 @@ class Push extends BaseController
     }
 
     // 查看映射
-    public function getMapping($type_name = 'users', $index_name = 'test_ik')
+    public function getMapping($type_name = 'users', $index_name = 'big_data')
     {
         $params = [
             'index' => $index_name,
@@ -140,7 +138,7 @@ class Push extends BaseController
         $params = [
             'index' => $index_name,
             'type' => $type_name,
-            'id' => $id,
+            'id' => time(),
             'body' => $doc
         ];
         $response = $this->client->index($params);
@@ -148,7 +146,7 @@ class Push extends BaseController
     }
 
     // 判断文档存在
-    public function exists_doc($id = 1, $index_name = 'test_ik', $type_name = 'users')
+    public function exists_doc($id = 1, $index_name = 'big_data', $type_name = 'users')
     {
         $params = [
             'index' => $index_name,
@@ -162,7 +160,7 @@ class Push extends BaseController
 
 
     // 获取文档
-    public function get_doc($id = 1, $index_name = 'test_ik', $type_name = 'users')
+    public function get_doc($id = 1, $index_name = 'big_data', $type_name = 'users')
     {
         $params = [
             'index' => $index_name,
@@ -174,7 +172,7 @@ class Push extends BaseController
     }
 
     // 更新文档
-    public function update_doc($id = 1, $index_name = 'test_ik', $type_name = 'users')
+    public function update_doc($id = 1, $index_name = 'big_data', $type_name = 'users')
     {
         // 可以灵活添加新字段,最好不要乱添加
         $params = [
@@ -193,7 +191,7 @@ class Push extends BaseController
     }
 
     // 删除文档
-    public function delete_doc($id = 1, $index_name = 'test_ik', $type_name = 'users')
+    public function delete_doc($id = 1, $index_name = 'big_data', $type_name = 'users')
     {
         $params = [
             'index' => $index_name,
@@ -206,7 +204,7 @@ class Push extends BaseController
     }
 
     // 查询文档 (分页，排序，权重，过滤)
-    public function search_doc($keywords = "运维", $index_name = "test_ik", $type_name = "users", $from = 0, $size = 2)
+    public function search_doc($keywords = "运维", $index_name = "big_data", $type_name = "users", $from = 0, $size = 2)
     {
         $params = [
             'index' => $index_name,
