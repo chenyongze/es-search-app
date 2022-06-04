@@ -1,3 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bigData</title>
+    <!-- wwwroot/public/static/layui/layui.js -->
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <script src="/static/layui/layui.js"></script>
+    <style>
+        .big-data {
+            margin-top: 100;
+        }
+    </style>
+</head>
+
 <body>
-    {$name}<br />
+    <div class="layui-container">
+        <fieldset class="layui-elem-field" style="margin-top: 30px;">
+            <legend>搜索</legend>
+            <div class="layui-field-box">
+                <form class="layui-form" action="">
+                    <div class="layui-form-item">
+                        <input type="text" name="title" required lay-verify="required" placeholder="请输入"
+                            autocomplete="off" class="layui-input" width="80px">
+                        <button class="layui-btn" lay-submit lay-filter="bigDataForm">搜索</button>
+
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+        <table class="layui-table">
+            <tbody>
+                {foreach $list as $key => $vo}
+                <tr>
+                    {foreach $vo as $key2 => $vo2}
+                    <td>{$key2}:{$vo2}</td>
+                    {/foreach}
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+        <!-- 分页 -->
+        <div id="big-data-page"></div>
 </body>
+
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        //监听提交
+        form.on('submit(bigDataForm)', function (data) {
+            layer.msg(JSON.stringify(data.field));
+            return false;
+        });
+    });
+
+    layui.use('laypage', function () {
+        var laypage = layui.laypage;
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'big-data-page',
+            count: "{$pageCount}"
+        });
+    });
+</script>
+
+</html>

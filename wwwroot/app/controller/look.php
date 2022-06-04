@@ -23,10 +23,40 @@ class Look extends BaseController
         $this->client = ClientBuilder::create()->setHosts($params)->build();
     }
 
+    /**
+     * 搜索数据
+     *
+     * @return void
+     */
     public function index()
     {
+
+        $list = [
+            [
+                "姓名" => '111',
+                "年龄" => 90,
+                "生肖" => "狗",
+            ],
+            [
+                "姓名" => '111',
+                "年龄" => 90,
+                "生肖" => "狗",
+            ],
+            [
+                "姓名" => '111',
+                "年龄" => 90,
+                "生肖" => "狗",
+            ],
+            [
+                "姓名" => '111',
+                "年龄" => 90,
+                "生肖" => "狗",
+            ],
+        ];
+        $pageCount = count($list);
         return view('index', [
-            'name' => 'big_data',
+            'list' => $list,
+            'pageCount' => $pageCount,
         ]);
     }
 }
