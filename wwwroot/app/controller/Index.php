@@ -31,10 +31,20 @@ class Index extends BaseController
             'index' => "big_data",
             'body' => [
                 'query' => [
-                    "match" => [
-                        "name" => [
-                            'query' => $keywords,
-                            'boost' => 3, // 权重
+                    'bool' => [
+                        'should' => [
+                            ['match_phrase' => ['pc' => [
+                                'query' => $keywords,
+                                'boost' => 2,
+                            ]]],
+                            ['match' => ['name' => [
+                                'query' => $keywords,
+                                'boost' => 2,
+                            ]]],
+                            ['match' => ['age' => [
+                                'query' => $keywords,
+                                'boost' => 2,
+                            ]]],
                         ],
                     ],
                 ],

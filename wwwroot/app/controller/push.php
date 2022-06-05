@@ -14,18 +14,73 @@ use app\BaseController;
 class Push extends BaseController
 {
     use \app\traits\EsTrait;
-    // 创建索引
+
+    /**
+     * 创建索引
+     * http://localhost:8697/Push
+     * @return void
+     */
     public function index()
     {
-        $docs[] = ['name' => 'yongze', 'age' => "32", 'sex' => '1'];
+        $docs[] = ['name' => '123', 'age' => "32", 'sex' => '1'];
         foreach ($docs as $v) {
             $r = $this->addDoc($v);
-            dump($r);
+            echo json_encode($v) . "<br/>";
         }
     }
 
-    // 添加文档
-    public function addDoc($doc, $index_name = 'big_data', $type_name = 'users')
+
+
+    /**
+     * http://localhost:8697/Push/createIndex
+     * 创建索引
+     * @param string $index_name
+     * @return void
+     */
+    public function createIndex($index_name = 'big_data')
+    {
+        // 只能创建一次
+        $params = [
+            'index' => $index_name,
+            'body' => [
+                'settings' => [
+                    'number_of_shards' => 15,
+                    'number_of_replicas' => 0
+                ]
+            ]
+        ];
+        try {
+            return $this->client->indices()->create($params);
+        } catch (\Exception $e) {
+            $msg = $e->getMessage();
+            $msg = json_decode($msg, true);
+            return $msg;
+        }
+    }
+
+    /**
+     * http://localhost:8697/Push/deleteIndex
+     * 删除索引
+     *
+     * @param string $index_name
+     * @return void
+     */
+    public function deleteIndex($index_name = 'big_data')
+    {
+        $params = ['index' => $index_name];
+        $response = $this->client->indices()->delete($params);
+        return $response;
+    }
+
+    /**
+     * 添加文档
+     *  
+     * @param [type] $doc
+     * @param string $index_name
+     * @param string $type_name
+     * @return void
+     */
+    private function addDoc($doc, $index_name = 'big_data', $type_name = 'users')
     {
         $params = [
             'index' => $index_name,
