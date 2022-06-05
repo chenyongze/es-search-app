@@ -22,7 +22,7 @@ class Push extends BaseController
      */
     public function index()
     {
-        $docs[] = ['name' => '123', 'age' => "32", 'sex' => '1'];
+        $docs[] = ['name' => '你好123', 'age' => "32", 'sex' => '1'];
         foreach ($docs as $v) {
             $r = $this->addDoc($v);
             echo json_encode($v) . "<br/>";
@@ -50,7 +50,8 @@ class Push extends BaseController
             ]
         ];
         try {
-            return $this->client->indices()->create($params);
+            $res = $this->client->indices()->create($params);
+            echo $res;
         } catch (\Exception $e) {
             $msg = $e->getMessage();
             $msg = json_decode($msg, true);
@@ -69,7 +70,7 @@ class Push extends BaseController
     {
         $params = ['index' => $index_name];
         $response = $this->client->indices()->delete($params);
-        return $response;
+        echo $response;
     }
 
     /**

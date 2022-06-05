@@ -37,7 +37,7 @@ class Index extends BaseController
                                 'query' => $keywords,
                                 'boost' => 2,
                             ]]],
-                            ['match' => ['name' => [
+                            ['match_phrase' => ['name' => [
                                 'query' => $keywords,
                                 'boost' => 2,
                             ]]],
