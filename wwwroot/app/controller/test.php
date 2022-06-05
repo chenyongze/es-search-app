@@ -3,8 +3,6 @@
 namespace app\controller;
 
 use app\BaseController;
-use Elastic\Elasticsearch\ClientBuilder;
-
 
 /**
  * @file: Test.php
@@ -15,26 +13,9 @@ use Elastic\Elasticsearch\ClientBuilder;
  */
 class Test extends BaseController
 {
-    private $client;
-    public function __construct()
-    {
-        $params = ['es:9200'];
-        $this->client = ClientBuilder::create()->setHosts($params)->build();
-    }
-
-    // 创建索引
-    public function index()
-    {
-        $docs[] = ['name' => '小甜甜mmmxxx', 'aihao' => '跳舞', 'age' => 27];
-        foreach ($docs as $v) {
-            //3.添加文档
-            $r = $this->addDoc(null, $v);
-            dump($r);
-        }
-    }
-
+    use \app\traits\EsTrait;
     /**
-     * http://localhost:8697/push/createIndex
+     * http://localhost:8697/test/createIndex
      * 创建索引
      * @param string $index_name
      * @return void
@@ -61,7 +42,7 @@ class Test extends BaseController
     }
 
     /**
-     * http://localhost:8697/push/deleteIndex
+     * http://localhost:8697/test/deleteIndex
      * 删除索引
      *
      * @param string $index_name
@@ -136,7 +117,7 @@ class Test extends BaseController
     }
 
     // 判断文档存在
-    public function exists_doc($id = 1, $index_name = 'big_data', $type_name = 'users')
+    public function existsDoc($id = 1, $index_name = 'big_data', $type_name = 'users')
     {
         $params = [
             'index' => $index_name,
@@ -150,7 +131,7 @@ class Test extends BaseController
 
 
     // 获取文档
-    public function get_doc($id = 1, $index_name = 'big_data', $type_name = 'users')
+    public function getDoc($id = 1, $index_name = 'big_data', $type_name = 'users')
     {
         $params = [
             'index' => $index_name,
@@ -162,7 +143,7 @@ class Test extends BaseController
     }
 
     // 更新文档
-    public function update_doc($id = 1, $index_name = 'big_data', $type_name = 'users')
+    public function updateDoc($id = 1, $index_name = 'big_data', $type_name = 'users')
     {
         // 可以灵活添加新字段,最好不要乱添加
         $params = [
@@ -180,21 +161,8 @@ class Test extends BaseController
         return $response;
     }
 
-    // 删除文档
-    public function delete_doc($id = 1, $index_name = 'big_data', $type_name = 'users')
-    {
-        $params = [
-            'index' => $index_name,
-            'type' => $type_name,
-            'id' => $id
-        ];
-
-        $response = $this->client->delete($params);
-        return $response;
-    }
-
     // 查询文档 (分页，排序，权重，过滤)
-    public function search_doc($keywords = "运维", $index_name = "big_data", $type_name = "users", $from = 0, $size = 2)
+    public function searchDoc($keywords = "运维", $index_name = "big_data", $type_name = "users", $from = 0, $size = 2)
     {
         $params = [
             'index' => $index_name,

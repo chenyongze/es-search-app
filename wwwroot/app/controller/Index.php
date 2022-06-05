@@ -11,21 +11,12 @@
 
 namespace app\controller;
 
-
 use app\BaseController;
-use Elastic\Elasticsearch\ClientBuilder;
 use think\facade\Request;
-use think\facade\View;
 
 class Index extends BaseController
 {
-    private $client;
-    public function __construct()
-    {
-        $params = ['es:9200'];
-        $this->client = ClientBuilder::create()->setHosts($params)->build();
-    }
-
+    use \app\traits\EsTrait;
     /**
      * 搜索数据
      *

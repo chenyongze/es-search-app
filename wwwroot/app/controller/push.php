@@ -3,8 +3,6 @@
 namespace app\controller;
 
 use app\BaseController;
-use Elastic\Elasticsearch\ClientBuilder;
-
 
 /**
  * @file: push.php
@@ -15,31 +13,23 @@ use Elastic\Elasticsearch\ClientBuilder;
  */
 class Push extends BaseController
 {
-    private $client;
-    public function __construct()
-    {
-        $params = ['es:9200'];
-        $this->client = ClientBuilder::create()->setHosts($params)->build();
-    }
-
+    use \app\traits\EsTrait;
     // 创建索引
     public function index()
     {
-        $docs[] = ['name' => '小甜甜mmmxxx', 'aihao' => '跳舞', 'age' => 27];
+        $docs[] = ['name' => 'yongze', 'age' => "32", 'sex' => '1'];
         foreach ($docs as $v) {
-            //3.添加文档
-            $r = $this->addDoc(null, $v);
+            $r = $this->addDoc($v);
             dump($r);
         }
     }
 
     // 添加文档
-    public function addDoc($id, $doc, $index_name = 'big_data', $type_name = 'users')
+    public function addDoc($doc, $index_name = 'big_data', $type_name = 'users')
     {
         $params = [
             'index' => $index_name,
             'type' => $type_name,
-            'id' => time(),
             'body' => $doc
         ];
         $response = $this->client->index($params);
