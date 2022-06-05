@@ -8,12 +8,14 @@ use Elastic\Elasticsearch\ClientBuilder;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Argument;
-use think\console\input\Option;
 use think\console\Output;
 
 /**
  * usage:
- *   docker exec xgk-o-php php /app/wwwroot/think es:import
+ *   docker exec xgk-o-php php /app/wwwroot/think es:import csv
+ *      csv 存放路径 wwwroot/public/importData/csv
+ *   docker exec xgk-o-php php /app/wwwroot/think es:import txt
+ *      txt 存放路径 wwwroot/public/importData/txt
  */
 class Import extends Command
 {
