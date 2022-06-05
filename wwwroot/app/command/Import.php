@@ -51,11 +51,11 @@ class Import extends Command
         foreach ($dirs as $value) {
             $data = explode('|', trim($value));
             $insertData = [];
-            foreach ($header as $kh => $vh) {
-                if (empty($data[$kh])) {
+            foreach ($header as $field => $vh) {
+                if (empty($data[$field])) {
                     break;
                 }
-                $insertData[$vh] = $data[$kh] ?? '';
+                $insertData[$vh] = $data[$field] ? (string)$data[$field] : '';
             }
             if (!empty($insertData)) {
                 $res = $this->addDoc($insertData);
@@ -82,11 +82,11 @@ class Import extends Command
         foreach ($dirs as $value) {
             $data = $value;
             $insertData = [];
-            foreach ($header as $kh => $vh) {
-                if (empty($data[$kh])) {
+            foreach ($header as $field => $vh) {
+                if (empty($data[$field])) {
                     break;
                 }
-                $insertData[$vh] = $data[$kh] ?? '';
+                $insertData[$vh] = $data[$field] ? (string)$data[$field] : '';
             }
             if (!empty($insertData)) {
                 $res = $this->addDoc($insertData);

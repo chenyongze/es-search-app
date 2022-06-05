@@ -34,15 +34,15 @@ class Index extends BaseController
                     'bool' => [
                         'should' => [
                             ['match_phrase' => ['pc' => [
-                                'query' => $keywords,
+                                'query' => (string)$keywords,
                                 'boost' => 2,
                             ]]],
                             ['match_phrase' => ['name' => [
-                                'query' => $keywords,
+                                'query' =>  (string)$keywords,
                                 'boost' => 2,
                             ]]],
                             ['match' => ['age' => [
-                                'query' => $keywords,
+                                'query' =>  (string)$keywords,
                                 'boost' => 2,
                             ]]],
                         ],
