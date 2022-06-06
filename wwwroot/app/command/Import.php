@@ -20,6 +20,9 @@ use think\console\Output;
 class Import extends Command
 {
     protected $client = null;
+    protected $indexName = 'big_data';
+    protected $bathSize = 1000;
+    protected $txtDivision = '|';
     protected function configure()
     {
         $this->setName('es:import')
@@ -46,20 +49,29 @@ class Import extends Command
     {
         set_time_limit(0);
         ini_set("memory_limit", "-1");
-        $dirs = file(public_path() . 'importData/txt/user.txt');
-        $header = explode('|', trim(array_shift($dirs)));
-        foreach ($dirs as $value) {
-            $data = explode('|', trim($value));
-            $insertData = [];
-            foreach ($header as $field => $vh) {
-                if (empty($data[$field])) {
-                    break;
+        $sourceDatas = file(public_path() . 'importData/txt/user.txt');
+        $header = explode($this->txtDivision, trim(array_shift($sourceDatas)));
+        foreach (array_chunk($sourceDatas, $this->bathSize) as $batchDatas) {
+            $insertDatas = [];
+            foreach ($batchDatas as $value) {
+                $data = explode($this->txtDivision, trim($value));
+                $temp = [];
+                $insertDatas['body'][] = [
+                    'index' => [
+                        '_index' => $this->indexName,
+                    ]
+                ];
+                foreach ($header as $field => $vh) {
+                    if (empty($data[$field])) {
+                        break;
+                    }
+                    $temp[$vh] = $data[$field] ? (string)$data[$field] : '';
                 }
-                $insertData[$vh] = $data[$field] ? (string)$data[$field] : '';
+                $insertDatas['body'][] = $temp;
             }
-            if (!empty($insertData)) {
-                $res = $this->addDoc($insertData);
-                $output->writeln(json_encode($insertData) . "状态：" . $res);
+            if (!empty($insertDatas)) {
+                $res = $this->addDocs($insertDatas);
+                $output->writeln(json_encode($insertDatas) . "状态：" . $res);
             } else {
                 $output->writeln('no data...');
             }
@@ -77,20 +89,29 @@ class Import extends Command
     {
         set_time_limit(0);
         ini_set("memory_limit", "-1");
-        $dirs = $this->getCsvData(public_path() . 'importData/csv/user.csv');
-        $header =  array_shift($dirs);
-        foreach ($dirs as $value) {
-            $data = $value;
-            $insertData = [];
-            foreach ($header as $field => $vh) {
-                if (empty($data[$field])) {
-                    break;
+        $sourceDatas = $this->getCsvData(public_path() . 'importData/csv/user.csv');
+        $header =  array_shift($sourceDatas);
+        foreach (array_chunk($sourceDatas, $this->bathSize) as $batchDatas) {
+            $insertDatas = [];
+            foreach ($batchDatas as $value) {
+                $data = $value;
+                $temp = [];
+                $insertDatas['body'][] = [
+                    'index' => [
+                        '_index' => $this->indexName,
+                    ]
+                ];
+                foreach ($header as $field => $vh) {
+                    if (empty($data[$field])) {
+                        break;
+                    }
+                    $temp[$vh] = $data[$field] ? (string)$data[$field] : '';
                 }
-                $insertData[$vh] = $data[$field] ? (string)$data[$field] : '';
+                $insertDatas['body'][] = $temp;
             }
-            if (!empty($insertData)) {
-                $res = $this->addDoc($insertData);
-                $output->writeln(json_encode($insertData) . "状态：" . $res);
+            if (!empty($insertDatas)) {
+                $res = $this->addDocs($insertDatas);
+                $output->writeln(json_encode($insertDatas) . "状态：" . $res);
             } else {
                 $output->writeln('no data...');
             }
@@ -114,6 +135,20 @@ class Import extends Command
             'body' => $doc
         ];
         $response = $this->client->index($params);
+        return $response;
+    }
+
+    /**
+     * 批量插入
+     *
+     * @param array $doc
+     * @param string $index_name
+     * @param string $type_name
+     * @return void
+     */
+    public function addDocs($docs)
+    {
+        $response = $this->client->bulk($docs);
         return $response;
     }
 
