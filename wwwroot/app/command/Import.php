@@ -109,6 +109,7 @@ class Import extends Command
                 }
                 $insertDatas['body'][] = $temp;
             }
+            unset($batchDatas);
             if (!empty($insertDatas)) {
                 $res = $this->addDocs($insertDatas);
                 $output->writeln(json_encode($insertDatas) . "状态：" . $res);
