@@ -21,7 +21,7 @@ class Import extends Command
 {
     protected $client = null;
     protected $indexName = 'big_data';
-    protected $bathSize = 1000;
+    protected $bathSize = 3000;
     protected $txtDivision = '|';
     protected function configure()
     {
