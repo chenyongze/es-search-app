@@ -36,46 +36,13 @@ class Import extends Command
         $output->writeln('es:import....start....');
         $type = $input->getArgument('type');
         if ($type == 'txt') {
-            $this->dataSaveTxt($input, $output);
+            $this->dataSaveCsvTxt($input, $output, 2);
         } elseif ($type == 'csv') {
-            $this->dataSaveCsv($input, $output);
+            $this->dataSaveCsvTxt($input, $output, 1);
         } else {
             $output->writeln('请选择类型');
         }
         $output->writeln('es:import....end....');
-    }
-
-    public function dataSaveTxt(Input $input, Output $output)
-    {
-        set_time_limit(0);
-        ini_set("memory_limit", "-1");
-        $sourceDatas = file(public_path() . 'importData/txt/user.txt');
-        $header = explode($this->txtDivision, trim(array_shift($sourceDatas)));
-        foreach (array_chunk($sourceDatas, $this->bathSize) as $batchDatas) {
-            $insertDatas = [];
-            foreach ($batchDatas as $value) {
-                $data = explode($this->txtDivision, trim($value));
-                $temp = [];
-                $insertDatas['body'][] = [
-                    'index' => [
-                        '_index' => $this->indexName,
-                    ]
-                ];
-                foreach ($header as $field => $vh) {
-                    if (empty($data[$field])) {
-                        break;
-                    }
-                    $temp[$vh] = $data[$field] ? (string)$data[$field] : '';
-                }
-                $insertDatas['body'][] = $temp;
-            }
-            if (!empty($insertDatas)) {
-                $res = $this->addDocs($insertDatas);
-                $output->writeln(json_encode($insertDatas) . "状态：" . $res);
-            } else {
-                $output->writeln('no data...');
-            }
-        }
     }
 
     /**
@@ -85,28 +52,32 @@ class Import extends Command
      * @param Output $output
      * @return void
      */
-    public function dataSaveCsv(Input $input, Output $output)
+    public function dataSaveCsvTxt(Input $input, Output $output, $type = 1)
     {
         set_time_limit(0);
         ini_set("memory_limit", "-1");
-        $sourceDatas = $this->getCsvData(public_path() . 'importData/csv/user.csv');
-        $header =  array_shift($sourceDatas);
+        $filePath =  $type == 1 ? 'importData/csv/user.csv' : "importData/txt/user.txt";
+        $sourceDatas = $type == 1 ? $this->getCsvData(public_path() . $filePath) : file(public_path() . $filePath);
+        $header = $type == 1 ? array_shift($sourceDatas) : explode($this->txtDivision, trim(array_shift($sourceDatas)));
         foreach (array_chunk($sourceDatas, $this->bathSize) as $batchDatas) {
             $insertDatas = [];
             foreach ($batchDatas as $value) {
-                $data = $value;
+                $data = $type == 1 ? $value : explode($this->txtDivision, trim($value));
                 $temp = [];
+                foreach ($header as $field => $vh) {
+                    if (empty($data[$field])) {
+                        continue;
+                    }
+                    $temp[$vh] = $data[$field] ? (string)$data[$field] : '';
+                }
+                if (empty($temp)) {
+                    continue;
+                }
                 $insertDatas['body'][] = [
                     'index' => [
                         '_index' => $this->indexName,
                     ]
                 ];
-                foreach ($header as $field => $vh) {
-                    if (empty($data[$field])) {
-                        break;
-                    }
-                    $temp[$vh] = $data[$field] ? (string)$data[$field] : '';
-                }
                 $insertDatas['body'][] = $temp;
             }
             unset($batchDatas);
