@@ -60,7 +60,7 @@ class Index extends BaseController
             foreach ($val['_source'] as $key => $value) {
                 $tmp[] = $key . " : " . $value;
             }
-            $list[] = implode(" | ", $tmp);
+            $list[] = implode("|", $tmp);
         });
         $pageCount = count($list);
         return view('index', [

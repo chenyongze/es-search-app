@@ -13,6 +13,11 @@
         .big-data {
             margin-top: 100;
         }
+
+        .layui-table td {
+            font-weight: bold;
+            font-size: medium;
+        }
     </style>
 </head>
 
@@ -30,11 +35,12 @@
                 </form>
             </div>
         </fieldset>
-        <table class="layui-table">
+
+        <table class="layui-table" frame=void>
             <tbody>
                 {foreach $list as $key => $vo}
-                <tr>
-                    <td>{$vo}</td>
+                <tr style="border-bottom: dashed 1.5px gray;">
+                    <td>{:str_replace("|",'<br />',$vo)}</td>
                 </tr>
                 {/foreach}
             </tbody>
