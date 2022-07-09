@@ -14,6 +14,23 @@ thinkphp6   elasticsearch:8.2.2  php:8.0-rc-cli-alpine  docker  docker-compose �
 <img width="1084" alt="image" src="https://user-images.githubusercontent.com/4531363/171979599-8f810235-0da4-42a2-9d41-a20d608018b7.png">
 
 
+
+# 安装
+```
+window 安装  docker
+
+
+
+
+linux 安装 docker 
+
+
+
+docker-compose 安装
+
+
+```
+
 # 启动项目
 
 ```shell
