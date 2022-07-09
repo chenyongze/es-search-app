@@ -22,7 +22,7 @@ class Push extends BaseController
      */
     public function index()
     {
-        $docs[] = ['name' => '你好123', 'age' => "32", 'sex' => '1'];
+        $docs[] = ['name' => '张三丰', 'age' => "32", 'pc' => '445万', 'sex' => '1'];
         foreach ($docs as $v) {
             $r = $this->addDoc($v);
             echo json_encode($v) . "<br/>";

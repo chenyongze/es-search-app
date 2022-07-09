@@ -26,27 +26,34 @@ class Index extends BaseController
     {
         $keywords = Request::get('keywords', "");
         $from = 0;
-        $size = 8000;
+        $size = 10000;
         $params =  [
             'index' => "big_data",
             'body' => [
                 'query' => [
-                    'bool' => [
-                        'should' => [
-                            ['match_phrase' => ['pc' => [
-                                'query' => (string)$keywords,
-                                'boost' => 2,
-                            ]]],
-                            ['match_phrase' => ['name' => [
-                                'query' =>  (string)$keywords,
-                                'boost' => 2,
-                            ]]],
-                            ['match' => ['age' => [
-                                'query' =>  (string)$keywords,
-                                'boost' => 2,
-                            ]]],
-                        ],
+                    "match_phrase_prefix" => [
+                        "name" => (string)$keywords,
                     ],
+                    // 'multi_match' => [
+                    //     "query" =>  '^' . (string)$keywords . "$",
+                    //     "fields" => ["pc", "name", 'xa', 'age'],
+                    //     // 'prefix_length' => ,
+                    // ],
+                    // 'bool' => [
+                    //     'should' => [
+                    //         ['match_phrase' => ['pc' => [
+                    //             'query' => (string)$keywords,
+                    //             'boost' => 2,
+                    //         ]]],
+
+                    //         [
+                    //             'match' => ['age' => [
+                    //                 'query' =>  (string)$keywords,
+                    //                 'boost' => 2,
+                    //             ]]
+                    //         ],
+                    //     ],
+                    // ],
                 ],
                 'from' => $from,
                 'size' => $size
